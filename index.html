@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Computer Science Textbook Library</title>
+
+<style>
+
+body{
+font-family: Arial;
+text-align:center;
+transition: background 0.5s;
+}
+
+button{
+padding:15px;
+margin:10px;
+font-size:16px;
+cursor:pointer;
+width:100px;
+}
+
+#reader{
+margin-top:30px;
+padding:20px;
+border:1px solid gray;
+width:70%;
+margin-left:auto;
+margin-right:auto;
+}
+
+#timer{
+font-size:24px;
+color: black;
+margin:20px;
+font-weight:bold;
+}
+
+#lock{
+display:none;
+font-size:28px;
+color: brown;
+margin-top:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Computer Science Textbook Library</h1>
+<h3>Borrow a textbook (1 minute reading time)</h3>
+
+<div id="books">
+
+<button onclick="borrowBook('ds')">Data Structures</button>
+<button onclick="borrowBook('os')">Operating System</button>
+<button onclick="borrowBook('cn')">Computer Networks</button>
+<button onclick="borrowBook('db')">Database Systems</button>
+<button onclick="borrowBook('ai')">Artificial Intelligence</button>
+
+</div>
+
+<div id="timer">Timer: 60 seconds</div>
+
+<div id="reader">
+
+<h2 id="title"></h2>
+
+<p id="content"></p>
+
+</div>
+
+<div id="lock">⛔ Time is up! Book Locked</div>
+
+<script>
+
+let colors = ["red","orange","yellow","green","blue","indigo","violet"];
+let colorIndex = 0;
+
+let borrowing = false;
+let waiting = false;
+
+let books = {
+
+ds:"Data Structures is a way of organizing and storing data so that it can be accessed efficiently. Examples include arrays, stacks, queues, linked lists, trees and graphs.",
+
+os:"Operating System is system software that manages computer hardware and software resources. It handles memory management, file systems, process scheduling and device management.",
+
+cn:"Computer Networks allow computers to communicate and share resources. Examples include LAN, WAN and the Internet.",
+
+db:"Database Systems store and manage large amounts of data using DBMS such as MySQL, Oracle and PostgreSQL.",
+
+ai:"Artificial Intelligence is a branch of computer science that enables machines to simulate human intelligence such as learning, reasoning and problem solving."
+
+};
+
+function borrowBook(book){
+
+if(borrowing || waiting){
+alert("Please wait before borrowing another book.");
+return;
+}
+
+borrowing = true;
+
+changeColor();
+
+document.getElementById("title").innerText = book.toUpperCase();
+
+document.getElementById("content").innerText = books[book];
+
+document.getElementById("lock").style.display="none";
+
+startTimer();
+
+}
+
+function changeColor(){
+
+document.body.style.background = colors[colorIndex];
+
+colorIndex++;
+
+if(colorIndex >= colors.length){
+colorIndex = 0;
+}
+
+}
+
+function startTimer(){
+
+let time = 60;
+
+document.getElementById("timer").innerHTML =
+"Reading Time Remaining: " + time + " seconds";
+
+let countdown = setInterval(function(){
+
+time--;
+
+document.getElementById("timer").innerHTML =
+"Reading Time Remaining: " + time + " seconds";
+
+if(time <= 0){
+
+clearInterval(countdown);
+
+document.getElementById("content").innerHTML="";
+document.getElementById("lock").style.display="block";
+
+borrowing = false;
+waiting = true;
+
+startWaitingTimer();
+
+}
+
+},1000);
+
+}
+
+function startWaitingTimer(){
+
+let waitTime = 60;
+
+let waitCountdown = setInterval(function(){
+
+document.getElementById("timer").innerHTML =
+"Waiting Time: " + waitTime + " seconds";
+
+waitTime--;
+
+if(waitTime < 0){
+
+clearInterval(waitCountdown);
+
+waiting = false;
+
+document.getElementById("timer").innerHTML =
+"You can borrow another textbook now.";
+
+document.getElementById("lock").style.display="none";
+
+}
+
+},1000);
+
+}
+
+</script>
+
+</body>
+</html>
